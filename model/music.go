@@ -2,8 +2,11 @@ package model
 
 import (
 	"fmt"
+	"gin-jwt/utils/audiofile"
+	"gin-jwt/utils/ffmpegutil"
 	"log/slog"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -94,7 +97,7 @@ func MusicScan() {
 			slog.Warn("Not supported file type: " + err.Error())
 		}
 
-		if fileType.Is("audio/ogg") || fileType.Is("audio/mpeg") {
+		if fileType.Is("audio/ogg") {
 			files = append(files, absPath)
 		}
 		return nil
@@ -143,4 +146,36 @@ func ListAllMusic() []MusicInfo {
 
 func ClearOldRecord() {
 	DB.Unscoped().Where("deleted_at is not null").Delete(&MusicInfo{})
+}
+
+func GetMusicTransFileById(id *int) string {
+	slog.Info(fmt.Sprintf("id: %d", *id))
+	musicInfo := MusicInfo{Id: *id}
+	DB.First(&musicInfo)
+	sourcePath := musicInfo.Path
+
+	fileType, err := mimetype.DetectFile(sourcePath)
+	if err != nil {
+		slog.Warn("not supported file type: " + err.Error())
+	}
+
+	if !fileType.Is("audio/ogg") {
+		cacheDir, err := os.UserCacheDir()
+		if err != nil {
+			slog.Error("cache dir not found")
+		}
+		cacheDir = cacheDir + "/senaNoMusic"
+
+		fileName := path.Base(sourcePath)
+
+		cacheFile := cacheDir + "/" + fileName + ".ogg"
+
+		// 查看缓存文件是否存在，不存在则重新生成
+		if !audiofile.CheckFileIsExist(cacheFile) {
+			ffmpegutil.ConvertTo44kOGG(sourcePath, cacheFile)
+		}
+
+		return cacheFile
+	}
+	return sourcePath
 }

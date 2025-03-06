@@ -22,6 +22,19 @@ func GetMusicStream(c *gin.Context) {
 	c.File(path)
 }
 
+func GetMusicStreamTrans(c *gin.Context) {
+	musicId := c.Params.ByName("id")
+	id, err := strconv.Atoi(musicId)
+	if err != nil {
+		c.String(http.StatusOK, "wrong id")
+	}
+	path := model.GetMusicTransFileById(&id)
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Disposition", "attachment; filename="+"music.ogg")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.File(path)
+}
+
 func GetMusicById(c *gin.Context) {
 	musicId := c.Params.ByName("id")
 	id, err := strconv.Atoi(musicId)

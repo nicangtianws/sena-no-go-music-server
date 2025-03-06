@@ -1,4 +1,4 @@
-package ffmpeg
+package ffmpegutil
 
 import (
 	"log/slog"
@@ -15,6 +15,8 @@ func ConvertTo44kOGG(inputPath, outputPath string) error {
 		"-c:a", "libvorbis", // 使用 libvorbis 编码器
 		outputPath, // 输出文件
 	)
+
+	slog.Info(cmd.String())
 
 	// 执行命令
 	if err := cmd.Run(); err != nil {
