@@ -168,7 +168,7 @@ func GetMusicTransFileById(id *int) string {
 
 		fileName := path.Base(sourcePath)
 
-		cacheFile := cacheDir + "/" + fileName + ".ogg"
+		cacheFile := cacheDir + "/" + fileName + "-320k.ogg"
 
 		// 查看缓存文件是否存在，不存在则重新生成
 		if !audiofile.CheckFileIsExist(cacheFile) {

@@ -1,7 +1,9 @@
 # ffmpeg
+- 编译仅支持图像处理和音频处理的ffmpeg
+- 版本：4.4
 - 依赖
 ```sh
-sudo apt install libpng-dev libjpeg-dev libvorbis-dev libmp3lame-dev
+sudo apt install libpng-dev libjpeg-dev libvorbis-dev libmp3lame-dev nasm pkg-config
 ```
 - 配置
 ```sh
@@ -14,6 +16,7 @@ sudo apt install libpng-dev libjpeg-dev libvorbis-dev libmp3lame-dev
   --disable-swscale \
   --disable-postproc \
   --disable-network \
+  --disable-ffprobe \
   --disable-everything \
   --enable-gpl \
   --enable-nonfree \
