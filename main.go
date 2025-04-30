@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"gin-jwt/controller"
 	"gin-jwt/middleware"
 	"gin-jwt/model"
@@ -13,8 +14,13 @@ import (
 )
 
 func init() {
+	// 连接并初始化数据库
 	model.ConnectDatabase()
-	err := godotenv.Load()
+
+	// 读取命令行指定的env配置文件
+	envFile := flag.String("env", ".env", "Path to the .env file")
+	flag.Parse()
+	err := godotenv.Load(*envFile)
 	if err != nil {
 		panic("Error loading .env file")
 	}
@@ -23,16 +29,14 @@ func init() {
 		panic("Error init admin user")
 	}
 
-	cacheDir, err := os.UserCacheDir()
-	if err != nil {
-		panic("cache dir not found")
-	}
-	cacheDir = path.Join(cacheDir, "senaNoMusic")
+	// 初始化缓存目录
+	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+	cacheDir := path.Join(basedir, "cache")
 	_, err = os.Stat(cacheDir)
 	if os.IsNotExist(err) {
 		err = os.Mkdir(cacheDir, 0755)
 		if err != nil {
-			panic("error create caeh dir")
+			panic("error create cache dir: " + cacheDir)
 		}
 	}
 }

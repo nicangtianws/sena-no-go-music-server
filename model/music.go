@@ -160,11 +160,8 @@ func GetMusicTransFileById(id *int) string {
 	}
 
 	if !fileType.Is("audio/ogg") {
-		cacheDir, err := os.UserCacheDir()
-		if err != nil {
-			slog.Error("cache dir not found")
-		}
-		cacheDir = cacheDir + "/senaNoMusic"
+		basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+		cacheDir := path.Join(basedir, "cache")
 
 		fileName := path.Base(sourcePath)
 
