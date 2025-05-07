@@ -1,6 +1,8 @@
 package model
 
 import (
+	"os"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -23,8 +25,8 @@ func ConnectDatabase() {
 
 func CreateAdminUser() (err error) {
 	u := User{
-		Username: "admin",
-		Password: "test",
+		Username: os.Getenv("ADMIN_NAME"),
+		Password: os.Getenv("ADMIN_PWD"),
 	}
 
 	existsUser := User{}

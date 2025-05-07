@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"gin-jwt/utils/audiofile"
 	"gin-jwt/utils/ffmpegutil"
-	"log/slog"
+	"gin-jwt/utils/mylog"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/gabriel-vasile/mimetype"
@@ -38,14 +37,14 @@ func MusicParse(path *string, basedir *string) {
 	file, err := taglib.Read(*path)
 
 	if err != nil {
-		slog.Info(fmt.Sprintf("wrong path: %s", *path))
+		mylog.LOG.Error().Msg(fmt.Sprintf("wrong path: %s", *path))
 	}
 
 	defer file.Close()
 
 	title := file.Title()
 
-	slog.Info(fmt.Sprintf("title: %s", title))
+	mylog.LOG.Info().Msg(fmt.Sprintf("title: %s", title))
 
 	musicInfo := MusicInfo{
 		Title:      title,
@@ -69,12 +68,14 @@ func MusicParse(path *string, basedir *string) {
 func MusicScan() {
 	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
 	if strutil.IsBlank(basedir) {
-		panic("cant find default path")
+		mylog.LOG.Error().Msg("cant find default path")
 	}
 
-	homedir, _ := os.UserHomeDir()
+	// homedir, _ := os.UserHomeDir()
 
-	dir := strings.Replace(basedir, "~", homedir, 1)
+	// dir := strings.Replace(basedir, "~", homedir, 1)
+
+	dir := path.Join(basedir, "music")
 
 	var files []string
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -94,7 +95,7 @@ func MusicScan() {
 
 		fileType, err := mimetype.DetectFile(absPath)
 		if err != nil {
-			slog.Warn("Not supported file type: " + err.Error())
+			mylog.LOG.Warn().Msg("Not supported file type: " + err.Error())
 		}
 
 		if fileType.Is("audio/ogg") {
@@ -125,7 +126,7 @@ func FindMusicByPath(file *string) []MusicInfo {
 }
 
 func GetMusicById(id *int) MusicInfo {
-	slog.Info(fmt.Sprintf("id: %d", *id))
+	mylog.LOG.Info().Msg(fmt.Sprintf("id: %d", *id))
 	musicInfo := MusicInfo{Id: *id}
 	DB.First(&musicInfo)
 	return musicInfo
@@ -149,14 +150,14 @@ func ClearOldRecord() {
 }
 
 func GetMusicTransFileById(id *int) string {
-	slog.Info(fmt.Sprintf("id: %d", *id))
+	mylog.LOG.Info().Msg(fmt.Sprintf("id: %d", *id))
 	musicInfo := MusicInfo{Id: *id}
 	DB.First(&musicInfo)
 	sourcePath := musicInfo.Path
 
 	fileType, err := mimetype.DetectFile(sourcePath)
 	if err != nil {
-		slog.Warn("not supported file type: " + err.Error())
+		mylog.LOG.Warn().Msg("not supported file type: " + err.Error())
 	}
 
 	if !fileType.Is("audio/ogg") {
@@ -169,7 +170,10 @@ func GetMusicTransFileById(id *int) string {
 
 		// 查看缓存文件是否存在，不存在则重新生成
 		if !audiofile.CheckFileIsExist(cacheFile) {
-			ffmpegutil.ConvertTo44kOGG(sourcePath, cacheFile)
+			err = ffmpegutil.ConvertTo44kOGG(sourcePath, cacheFile)
+			if err != nil {
+				mylog.LOG.Error().Msg("convert failed: " + err.Error())
+			}
 		}
 
 		return cacheFile

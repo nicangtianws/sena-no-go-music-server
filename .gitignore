@@ -1,3 +1,5 @@
 __debug*
 *.db
-/bin
+bin
+logs
+data

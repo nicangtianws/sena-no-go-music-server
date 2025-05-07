@@ -5,6 +5,7 @@ import (
 	"gin-jwt/controller"
 	"gin-jwt/middleware"
 	"gin-jwt/model"
+	"gin-jwt/utils/mylog"
 	"os"
 	"path"
 
@@ -14,16 +15,21 @@ import (
 )
 
 func init() {
-	// 连接并初始化数据库
-	model.ConnectDatabase()
-
-	// 读取命令行指定的env配置文件
+	// 初始化配置文件
 	envFile := flag.String("env", ".env", "Path to the .env file")
 	flag.Parse()
 	err := godotenv.Load(*envFile)
 	if err != nil {
 		panic("Error loading .env file")
 	}
+
+	// 连初始化数据库
+	model.ConnectDatabase()
+
+	// 初始化日志
+	mylog.LogInit()
+
+	// 初始化管理员用户
 	err = model.CreateAdminUser()
 	if err != nil {
 		panic("Error init admin user")
@@ -31,12 +37,24 @@ func init() {
 
 	// 初始化缓存目录
 	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+	mylog.LOG.Info().Msg("base dir: " + basedir)
 	cacheDir := path.Join(basedir, "cache")
+	mylog.LOG.Info().Msg("cache dir: " + cacheDir)
 	_, err = os.Stat(cacheDir)
 	if os.IsNotExist(err) {
 		err = os.Mkdir(cacheDir, 0755)
 		if err != nil {
 			panic("error create cache dir: " + cacheDir)
+		}
+	}
+
+	// 初始化存储目录
+	musicDir := path.Join(basedir, "music")
+	_, err = os.Stat(musicDir)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(musicDir, 0755)
+		if err != nil {
+			panic("error create music dir: " + musicDir)
 		}
 	}
 }

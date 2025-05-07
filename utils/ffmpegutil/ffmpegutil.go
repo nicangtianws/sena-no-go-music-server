@@ -1,7 +1,7 @@
 package ffmpegutil
 
 import (
-	"log/slog"
+	"gin-jwt/utils/mylog"
 	"os/exec"
 )
 
@@ -16,11 +16,11 @@ func ConvertTo44kOGG(inputPath, outputPath string) error {
 		outputPath, // 输出文件
 	)
 
-	slog.Info(cmd.String())
+	mylog.LOG.Info().Msg(cmd.String())
 
 	// 执行命令
 	if err := cmd.Run(); err != nil {
-		slog.Error("FFmpeg 执行失败: " + err.Error())
+		return err
 	}
 
 	return nil
