@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"gin-jwt/utils/audiofile"
+	"gin-jwt/utils/audiofileutil"
 	"gin-jwt/utils/ffmpegutil"
 	"gin-jwt/utils/mylog"
 	"os"
@@ -98,9 +98,16 @@ func MusicScan() {
 			mylog.LOG.Warn().Msg("Not supported file type: " + err.Error())
 		}
 
-		if fileType.Is("audio/ogg") {
-			files = append(files, absPath)
+		// 是否在受支持音频列表内
+		_, err = audiofileutil.GetAudioFileType(fileType.String())
+
+		if err != nil {
+			mylog.LOG.Info().Msg("不支持该文件格式：" + fileType.String())
+			return nil
 		}
+
+		files = append(files, absPath)
+
 		return nil
 	})
 	if err != nil {
@@ -150,7 +157,7 @@ func ClearOldRecord() {
 }
 
 func GetMusicTransFileById(id *int) string {
-	mylog.LOG.Info().Msg(fmt.Sprintf("id: %d", *id))
+	mylog.LOG.Info().Msg(fmt.Sprintf("music id: %d", *id))
 	musicInfo := MusicInfo{Id: *id}
 	DB.First(&musicInfo)
 	sourcePath := musicInfo.Path
@@ -158,21 +165,41 @@ func GetMusicTransFileById(id *int) string {
 	fileType, err := mimetype.DetectFile(sourcePath)
 	if err != nil {
 		mylog.LOG.Warn().Msg("not supported file type: " + err.Error())
+		return ""
 	}
 
+	// mp3不进行转换
+	if fileType.Is("audio/mp3") {
+		return sourcePath
+	}
+
+	// 其他类型如wav、flac需要进行转换
 	if !fileType.Is("audio/ogg") {
 		basedir := os.Getenv("DEFAULT_MUSIC_PATH")
 		cacheDir := path.Join(basedir, "cache")
 
 		fileName := path.Base(sourcePath)
 
-		cacheFile := cacheDir + "/" + fileName + "-320k.ogg"
+		cacheFile := path.Join(cacheDir, fileName+"-320k.ogg")
+		coverFile := path.Join(cacheDir, fileName+"-320k.jpg")
 
 		// 查看缓存文件是否存在，不存在则重新生成
-		if !audiofile.CheckFileIsExist(cacheFile) {
+		if !audiofileutil.CheckFileIsExist(cacheFile) {
 			err = ffmpegutil.ConvertTo44kOGG(sourcePath, cacheFile)
 			if err != nil {
-				mylog.LOG.Error().Msg("convert failed: " + err.Error())
+				// 移除生成失败的文件
+				os.Remove(cacheFile)
+				mylog.LOG.Err(err)
+			}
+		}
+
+		// 提取封面
+		if !audiofileutil.CheckFileIsExist(coverFile) {
+			err = ffmpegutil.ConvertCover(sourcePath, coverFile)
+			if err != nil {
+				// 移除生成失败的文件
+				os.Remove(coverFile)
+				mylog.LOG.Err(err)
 			}
 		}
 

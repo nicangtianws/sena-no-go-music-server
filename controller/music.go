@@ -3,6 +3,7 @@ package controller
 import (
 	"gin-jwt/model"
 	"net/http"
+	"path"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,11 +29,12 @@ func GetMusicStreamTrans(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusOK, "wrong id")
 	}
-	path := model.GetMusicTransFileById(&id)
+	file := model.GetMusicTransFileById(&id)
+	fileName := path.Base(file)
 	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Content-Disposition", "attachment; filename="+"music.ogg")
+	c.Header("Content-Disposition", "attachment; filename="+fileName)
 	c.Header("Content-Transfer-Encoding", "binary")
-	c.File(path)
+	c.File(file)
 }
 
 func GetMusicById(c *gin.Context) {
