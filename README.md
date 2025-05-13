@@ -1,7 +1,31 @@
-# ffmpeg
-- 编译仅支持图像处理和音频处理的ffmpeg
+# 简介
+基于go、ffmpeg的音乐服务器
+## 构建
+### 开发
+```sh
+git clone https://github.com/nicangtianws/sena-no-go-music-server senanomusic
+cd senanomusic
+make dev
+```
+### 打包
+```sh
+make build
+```
+#### docker镜像
+- go编译基础镜像
+基于alpine:3.21
+apk源替换为中科大源
+内置基础编译环境
+内置taglib
+[builder](docker/builder-Dockerfile)
+
+- 运行基础镜像
+基于alpine:3.21
+
+## ffmpeg
+- 由于格式转换依赖于ffmpeg，所以编译一个仅支持简单图像处理和音频处理的ffmpeg
 - 版本：7.1.1
-## 依赖
+### 依赖
 ```sh
 sudo apt install pkg-config
 ```
@@ -75,7 +99,7 @@ cd /data/senanomusic/ffmpeg-deps/fdk-aac-2.0.3
 ./configure --enable-static --disable-shared --prefix=/data/senanomusic/ffmpeg-deps/build
 make -j$(nproc) && make install
 ```
-## 配置
+### 配置
 ```sh
 ./configure \
   --prefix=/opt/ffmpeg \
@@ -119,7 +143,7 @@ make -j$(nproc) && make install
 ```sh
 ./configure --list-encoders
 ```
-## 构建
+### 构建
 ```sh
 make clean
 make -j$(nproc)
