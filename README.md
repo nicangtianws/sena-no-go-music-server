@@ -22,6 +22,19 @@ apk源替换为中科大源
 - 运行基础镜像
 基于alpine:3.21
 
+- 打包镜像
+```sh
+docker build -t senanomusic .
+```
+
+- 运行
+```sh
+docker run -d --name senanomusic \
+-p 8000:8000 \
+-v /data/senanomusic/music/:/data/senanomusic/music/ \
+senanomusic
+```
+
 ## ffmpeg
 - 由于格式转换依赖于ffmpeg，所以编译一个仅支持简单图像处理和音频处理的ffmpeg
 - 版本：7.1.1
