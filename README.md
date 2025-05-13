@@ -7,27 +7,34 @@ git clone https://github.com/nicangtianws/sena-no-go-music-server senanomusic
 cd senanomusic
 make dev
 ```
-### 打包
+
+### 部署
+#### 打包
 ```sh
 make build
 ```
-#### docker镜像
-- go编译基础镜像
+#### 运行
+```sh
+./bin/senanomusic -env=./bin/.env
+```
+
+### 使用docker镜像部署
+#### go编译基础镜像
 基于alpine:3.21
 apk源替换为中科大源
 内置基础编译环境
 内置taglib
 [builder](docker/builder-Dockerfile)
 
-- 运行基础镜像
+#### 运行基础镜像
 基于alpine:3.21
 
-- 打包镜像
+#### 打包镜像
 ```sh
 docker build -t senanomusic .
 ```
 
-- 运行
+#### 运行
 ```sh
 docker run -d --name senanomusic \
 -p 8000:8000 \
@@ -112,6 +119,7 @@ cd /data/senanomusic/ffmpeg-deps/fdk-aac-2.0.3
 ./configure --enable-static --disable-shared --prefix=/data/senanomusic/ffmpeg-deps/build
 make -j$(nproc) && make install
 ```
+
 ### 配置
 ```sh
 ./configure \
@@ -156,6 +164,7 @@ make -j$(nproc) && make install
 ```sh
 ./configure --list-encoders
 ```
+
 ### 构建
 ```sh
 make clean
