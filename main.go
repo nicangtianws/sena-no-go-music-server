@@ -90,7 +90,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if strutil.IsBlank(host) {
-		host = "127.0.0.1"
+		host = "0.0.0.0"
 	}
 
 	if strutil.IsBlank(port) {
