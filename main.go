@@ -16,7 +16,7 @@ import (
 
 func init() {
 	// 初始化配置文件
-	envFile := flag.String("env", ".env", "Path to the .env file")
+	envFile := flag.String("env", ".env.dev", "Path to the .env file")
 	flag.Parse()
 	err := godotenv.Load(*envFile)
 	if err != nil {
@@ -78,6 +78,10 @@ func main() {
 		apiV1.GET("/music/scan", controller.MusicScan)
 		apiV1.GET("/music/list", controller.ListAllMusic)
 		apiV1.GET("/music/clear", controller.ClearOldRecord)
+		apiV1.POST("/collect", controller.CreateCollect)
+		apiV1.GET("/collect", controller.ListCollectByUserId)
+		apiV1.POST("/collect/add", controller.AddMusicToCollect)
+		apiV1.POST("/collect/delete", controller.DeleteMusicFromCollect)
 	}
 
 	apiV2 := r.Group("/api/v2")

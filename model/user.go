@@ -12,8 +12,8 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"size:255;not null;unique" json:"username"`
-	Password string `gorm:"size:255;not null;" json:"password"`
+	Username string `json:"username" gorm:"size:255;not null;unique"`
+	Password string `json:"password" gorm:"size:255;not null;"`
 }
 
 func (u *User) SaveUser() (*User, error) {

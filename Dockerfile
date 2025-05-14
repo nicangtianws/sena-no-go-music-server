@@ -30,9 +30,9 @@ COPY --from=builder /opt/app/bin/senanomusic /opt/app/senanomusic
 RUN chmod +x /opt/app/senanomusic
 COPY --from=builder /opt/app/bin/.env /opt/app/.env
 
-# 暴露容器的 8080 端口，用于外部访问
+# 暴露容器的 8000 端口，用于外部访问
 EXPOSE 8000
 
 # 设置容器启动时运行的命令
 # 这里是运行编译好的可执行文件 /opt/app/senanomusic
-CMD ["./senanomusic", "-env=.env"]
+ENTRYPOINT ["./senanomusic", "-env=.env"]

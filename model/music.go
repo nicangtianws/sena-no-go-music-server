@@ -15,22 +15,23 @@ import (
 	"gorm.io/gorm"
 )
 
+// 基础信息
 type MusicInfo struct {
 	gorm.Model
 	Id         int    `json:"id" gorm:"unique;primaryKey;autoIncrement"`
-	BaseDir    string `json:"basedir"`
-	Path       string `json:"path"`
-	Title      string `json:"title"`
-	Artist     string `json:"artist"`
-	Album      string `json:"album"`
-	Comment    string `json:"comment"`
-	Genre      string `json:"genre"`
-	Year       int    `json:"year"`
-	Track      int    `json:"track"`
-	Length     int    `json:"length"`
-	Bitrate    int    `json:"bitrate"`
-	Samplerate int    `json:"samplerate"`
-	Channels   int    `json:"channels"`
+	BaseDir    string `json:"basedir"`    // 所在文件夹
+	Path       string `json:"path"`       // 绝对路径
+	Title      string `json:"title"`      // 标题
+	Artist     string `json:"artist"`     // 艺术家
+	Album      string `json:"album"`      // 专辑
+	Comment    string `json:"comment"`    // 简介
+	Genre      string `json:"genre"`      // 风格
+	Year       int    `json:"year"`       // 年份
+	Track      int    `json:"track"`      // 轨道
+	Length     int    `json:"length"`     // 时长
+	Bitrate    int    `json:"bitrate"`    // 比特率
+	Samplerate int    `json:"samplerate"` // 采样率
+	Channels   int    `json:"channels"`   // 通道
 }
 
 func MusicParse(path *string, basedir *string) {

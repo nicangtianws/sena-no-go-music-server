@@ -21,6 +21,7 @@ func ConnectDatabase() {
 
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&MusicInfo{})
+	DB.AutoMigrate(&CollectInfo{})
 }
 
 func CreateAdminUser() (err error) {
