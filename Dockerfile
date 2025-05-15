@@ -19,16 +19,14 @@ RUN make build
 # Alpine 是一个极简的 Linux 发行版，适合部署阶段
 FROM alpine:3.21
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && apk update && apk add taglib
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && apk add --no-cache taglib
 
 # 设置工作目录为 /opt/app/
 RUN mkdir -p /opt/app/ && chmod -R 755 /opt/app/
 WORKDIR /opt/app/
 
 # 从编译阶段的镜像中拷贝编译后的二进制文件到运行镜像中
-COPY --from=builder /opt/app/bin/senanomusic /opt/app/senanomusic
-RUN chmod +x /opt/app/senanomusic
-COPY --from=builder /opt/app/bin/.env /opt/app/.env
+COPY --from=builder /opt/app/bin/* /opt/app/
 
 # 暴露容器的 8000 端口，用于外部访问
 EXPOSE 8000
