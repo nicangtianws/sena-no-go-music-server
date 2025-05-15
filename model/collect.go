@@ -104,6 +104,12 @@ func ListCollectByUserId(userId int) []CollectInfo {
 	return collectList
 }
 
-func FindCollectById() {
+func FindCollectById(collectId int, userId int) CollectInfo {
+	queryCollect := CollectInfo{
+		UserId: userId,
+		Id:     collectId,
+	}
+	DB.Find(&queryCollect).Preload("MusicInfos").First(&queryCollect)
 
+	return queryCollect
 }

@@ -80,6 +80,7 @@ func main() {
 		apiV1.GET("/music/clear", controller.ClearOldRecord)
 		apiV1.POST("/collect", controller.CreateCollect)
 		apiV1.GET("/collect", controller.ListCollectByUserId)
+		apiV1.GET("/collect/:id", controller.GetCollectByUserId)
 		apiV1.POST("/collect/add", controller.AddMusicToCollect)
 		apiV1.POST("/collect/delete", controller.DeleteMusicFromCollect)
 	}

@@ -3,6 +3,7 @@ package controller
 import (
 	"gin-jwt/model"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -88,4 +89,22 @@ func ListCollectByUserId(c *gin.Context) {
 	collectList := model.ListCollectByUserId(userId)
 
 	c.JSON(http.StatusOK, ResultData(collectList))
+}
+
+func GetCollectByUserId(c *gin.Context) {
+	idParam := c.Params.ByName("id")
+	collectId, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.String(http.StatusOK, "wrong id")
+	}
+
+	userId, err := GetUserIdFromToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, ResultErr(err.Error()))
+		return
+	}
+
+	collect := model.FindCollectById(collectId, userId)
+
+	c.JSON(http.StatusOK, ResultData(collect))
 }
