@@ -2,9 +2,9 @@ package model
 
 import (
 	"fmt"
-	"gin-jwt/utils/audiofileutil"
-	"gin-jwt/utils/ffmpegutil"
-	"gin-jwt/utils/mylog"
+	"gin-jwt/util/audiofileutil"
+	"gin-jwt/util/ffmpegutil"
+	"gin-jwt/util/mylog"
 	"os"
 	"path"
 	"path/filepath"

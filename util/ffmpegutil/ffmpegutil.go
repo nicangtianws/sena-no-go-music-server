@@ -1,7 +1,7 @@
 package ffmpegutil
 
 import (
-	"gin-jwt/utils/mylog"
+	"gin-jwt/util/mylog"
 	"os/exec"
 )
 

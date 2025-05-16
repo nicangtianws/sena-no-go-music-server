@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"gin-jwt/utils/token"
+	"gin-jwt/util/token"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

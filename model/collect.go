@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
-	"gin-jwt/utils/mylog"
+	"gin-jwt/util/mylog"
 
 	"gorm.io/gorm"
 )

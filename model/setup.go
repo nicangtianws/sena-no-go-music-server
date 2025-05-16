@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gin-jwt/utils/audiofileutil"
+	"gin-jwt/util/audiofileutil"
 	"os"
 	"path"
 

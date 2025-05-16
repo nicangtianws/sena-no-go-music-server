@@ -5,8 +5,8 @@ import (
 	"gin-jwt/controller"
 	"gin-jwt/middleware"
 	"gin-jwt/model"
-	"gin-jwt/utils/audiofileutil"
-	"gin-jwt/utils/mylog"
+	"gin-jwt/util/audiofileutil"
+	"gin-jwt/util/mylog"
 	"os"
 	"path"
 

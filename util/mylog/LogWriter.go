@@ -2,7 +2,7 @@ package mylog
 
 import (
 	"fmt"
-	"gin-jwt/utils/audiofileutil"
+	"gin-jwt/util/audiofileutil"
 	"os"
 	"path"
 	"path/filepath"

@@ -3,7 +3,7 @@ package controller
 import (
 	"errors"
 	"gin-jwt/model"
-	"gin-jwt/utils/token"
+	"gin-jwt/util/token"
 	"net/http"
 	"strconv"
 

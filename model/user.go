@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"gin-jwt/utils/token"
+	"gin-jwt/util/token"
 	"html"
 	"strings"
 
