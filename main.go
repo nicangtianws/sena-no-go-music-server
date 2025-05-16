@@ -8,7 +8,6 @@ import (
 	"gin-jwt/util/audiofileutil"
 	"gin-jwt/util/mylog"
 	"os"
-	"path"
 
 	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/gin-gonic/gin"
@@ -24,42 +23,21 @@ func init() {
 		panic("Error loading .env file")
 	}
 
-	// 连初始化数据库
-	model.ConnectDatabase()
-
-	// 初始化日志
-	mylog.LogInit()
-
-	// 初始化管理员用户
-	err = model.CreateAdminUser()
-	if err != nil {
-		panic("Error init admin user")
-	}
-
-	// 初始化缓存目录
+	// 获取基路径
 	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
 	basedir = audiofileutil.AbsBasedir(basedir)
-	mylog.LOG.Info().Msg("base dir: " + basedir)
-	cacheDir := path.Join(basedir, "cache")
-	mylog.LOG.Info().Msg("cache dir: " + cacheDir)
-	_, err = os.Stat(cacheDir)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(cacheDir, 0755)
-		if err != nil {
-			panic("error create cache dir: " + cacheDir)
-		}
-	}
 
-	// 初始化存储目录
-	musicDir := path.Join(basedir, "music")
-	mylog.LOG.Info().Msg("music dir: " + musicDir)
-	_, err = os.Stat(musicDir)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(musicDir, 0755)
-		if err != nil {
-			panic("error create music dir: " + musicDir)
-		}
-	}
+	// 初始化日志
+	mylog.InitLog(&basedir)
+
+	// 连初始化数据库
+	model.InitDatabase(&basedir)
+
+	// 初始化数据目录
+	model.InitDir(&basedir)
+
+	// 初始化管理员用户
+	model.InitAdminUser()
 }
 
 func main() {
