@@ -60,7 +60,11 @@ func ListMusicByTitle(c *gin.Context) {
 }
 
 func MusicScan(c *gin.Context) {
-	model.MusicScan()
+	err := model.MusicScan()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResultErr(err.Error()))
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
 		"data":    "success",

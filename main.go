@@ -5,6 +5,7 @@ import (
 	"gin-jwt/controller"
 	"gin-jwt/middleware"
 	"gin-jwt/model"
+	"gin-jwt/utils/audiofileutil"
 	"gin-jwt/utils/mylog"
 	"os"
 	"path"
@@ -16,7 +17,7 @@ import (
 
 func init() {
 	// 初始化配置文件
-	envFile := flag.String("env", ".env.dev", "Path to the .env file")
+	envFile := flag.String("env", ".env", "Path to the .env file")
 	flag.Parse()
 	err := godotenv.Load(*envFile)
 	if err != nil {
@@ -37,6 +38,7 @@ func init() {
 
 	// 初始化缓存目录
 	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+	basedir = audiofileutil.AbsBasedir(basedir)
 	mylog.LOG.Info().Msg("base dir: " + basedir)
 	cacheDir := path.Join(basedir, "cache")
 	mylog.LOG.Info().Msg("cache dir: " + cacheDir)
@@ -50,6 +52,7 @@ func init() {
 
 	// 初始化存储目录
 	musicDir := path.Join(basedir, "music")
+	mylog.LOG.Info().Msg("music dir: " + musicDir)
 	_, err = os.Stat(musicDir)
 	if os.IsNotExist(err) {
 		err = os.Mkdir(musicDir, 0755)

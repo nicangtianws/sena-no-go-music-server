@@ -2,6 +2,7 @@ package mylog
 
 import (
 	"fmt"
+	"gin-jwt/utils/audiofileutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -16,6 +17,7 @@ var LOG *zerolog.Logger
 func LogInit() {
 	fmt.Printf("log writer init")
 	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+	basedir = audiofileutil.AbsBasedir(basedir)
 	// 初始化日志目录写入器
 	logDir := path.Join(basedir, "logs")
 	_, err := os.Stat(logDir)
