@@ -2,6 +2,7 @@ package model
 
 import (
 	"os"
+	"path"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -9,12 +10,14 @@ import (
 
 var DB *gorm.DB
 
-const DB_PATH = "./Music.db"
+const DB_FILE = "Music.db"
 
 // 连接数据库
 func ConnectDatabase() {
+	basedir := os.Getenv("DEFAULT_MUSIC_PATH")
+	dbpath := path.Join(basedir, DB_FILE)
 	var err error
-	DB, err = gorm.Open(sqlite.Open(DB_PATH), &gorm.Config{})
+	DB, err = gorm.Open(sqlite.Open(dbpath), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
