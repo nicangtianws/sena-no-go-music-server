@@ -48,16 +48,21 @@ func main() {
 		public.POST("/login", controller.Login)
 	}
 
+	apiV1NoAuth := r.Group("/api/v1")
+	{
+		apiV1NoAuth.GET("/music/:id", controller.GetMusicById)
+		apiV1NoAuth.GET("/music/file/:id", controller.GetMusicStream)
+		apiV1NoAuth.GET("/music/search/:keyword", controller.ListMusicByTitle)
+		apiV1NoAuth.GET("/music/list", controller.ListAllMusic)
+
+	}
+
 	apiV1 := r.Group("/api/v1")
 	{
 		apiV1.Use(middleware.JwtAuthMiddleware()) // 在路由组中使用中间件
 		apiV1.GET("/user", controller.CurrentUser)
 		apiV1.GET("/user/:id", controller.GetUserByID)
-		apiV1.GET("/music/:id", controller.GetMusicById)
-		apiV1.GET("/music/file/:id", controller.GetMusicStream)
-		apiV1.GET("/music/search/:keyword", controller.ListMusicByTitle)
 		apiV1.GET("/music/scan", controller.MusicScan)
-		apiV1.GET("/music/list", controller.ListAllMusic)
 		apiV1.GET("/music/clear", controller.ClearOldRecord)
 		apiV1.POST("/collect", controller.CreateCollect)
 		apiV1.GET("/collect", controller.ListCollectByUserId)
@@ -66,10 +71,14 @@ func main() {
 		apiV1.POST("/collect/delete", controller.DeleteMusicFromCollect)
 	}
 
+	apiV2NoAuth := r.Group("/api/v2")
+	{
+		apiV2NoAuth.GET("/music/file/:id", controller.GetMusicStreamTrans)
+	}
+
 	apiV2 := r.Group("/api/v2")
 	{
 		apiV2.Use(middleware.JwtAuthMiddleware())
-		apiV2.GET("/music/file/:id", controller.GetMusicStreamTrans)
 	}
 
 	host := os.Getenv("HOST")

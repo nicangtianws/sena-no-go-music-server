@@ -3,14 +3,14 @@ mkdir -p /data/senanomusic/ffmpeg-deps/build && cd /data/senanomusic/ffmpeg-deps
 
 # 依赖下载
 # zlib必须使用该版本
-wget -O zlib-1.2.11.tar.gz https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz
-wget https://www.ijg.org/files/jpegsrc.v9e.tar.gz
-wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.43/libpng-1.6.43.tar.xz
-wget https://github.com/xiph/flac/releases/download/1.4.3/flac-1.4.3.tar.xz
-wget https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.xz
-wget https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz
-wget https://sourceforge.net/projects/lame/files/lame/3.100/lame-3.100.tar.gz
-wget https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.3.tar.gz
+[ -f zlib-1.2.11.tar.gz ] || wget -O zlib-1.2.11.tar.gz https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz
+[ -f jpegsrc.v9e.tar.gz ] || wget https://www.ijg.org/files/jpegsrc.v9e.tar.gz
+[ -f lame-3.100.tar.gz ] || wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.43/libpng-1.6.43.tar.xz
+[ -f fdk-aac-2.0.3.tar.gz ] || wget https://github.com/xiph/flac/releases/download/1.4.3/flac-1.4.3.tar.xz
+[ -f libpng-1.6.43.tar.xz ] || wget https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.xz
+[ -f flac-1.4.3.tar.xz ] || wget https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz
+[ -f libogg-1.3.5.tar.xz ] || wget https://sourceforge.net/projects/lame/files/lame/3.100/lame-3.100.tar.gz
+[ -f libvorbis-1.3.7.tar.xz ] || wget https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.3.tar.gz
 
 # 解压
 tar -zxf zlib-1.2.11.tar.gz

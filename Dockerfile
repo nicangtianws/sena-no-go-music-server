@@ -22,7 +22,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 WORKDIR /opt/app/
 
 # 从编译阶段的镜像中拷贝编译后的二进制文件到运行镜像中
-COPY --from=builder /opt/app/target/* /opt/app/
+COPY --from=builder /opt/app/target/bin/* /opt/app/
 
 # 暴露容器的 8000 端口，用于外部访问
 EXPOSE 8000
